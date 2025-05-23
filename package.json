@@ -11,7 +11,11 @@
     "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
     "typecheck": "npm run typecheck:node && npm run typecheck:web",
     "start": "electron-vite preview",
+    "app": "concurrently \"npm run server\" \"npm run electron\"",
+    "server": "nodemon src/server/index.js",
+    "copy-server": "cp -r src/server dist-electron/server",
     "dev": "electron-vite dev",
+    "electron": "wait-on http://localhost:3001 && electron-vite dev",
     "build": "npm run typecheck && electron-vite build",
     "postinstall": "electron-builder install-app-deps",
     "build:win": "npm run build && electron-builder --win --config",
@@ -22,8 +26,11 @@
     "@electron-toolkit/preload": "^2.0.0",
     "@electron-toolkit/utils": "^2.0.0",
     "@mdxeditor/editor": "^1.14.3",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
     "fs-extra": "^11.2.0",
-    "jotai": "^2.6.1"
+    "jotai": "^2.6.1",
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^1.0.1",
@@ -37,20 +44,24 @@
     "@vitejs/plugin-react": "^4.0.4",
     "autoprefixer": "^10.4.16",
     "clsx": "^2.1.0",
+    "concurrently": "^9.1.2",
     "electron": "^25.6.0",
     "electron-builder": "^24.6.3",
     "electron-vite": "^3.1.0",
     "eslint": "^8.47.0",
     "eslint-plugin-react": "^7.33.2",
     "lodash": "^4.17.21",
+    "nodemon": "^3.1.10",
     "postcss": "^8.4.32",
     "prettier": "^3.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.12.0",
+    "rollup-plugin-copy": "^3.5.0",
     "tailwind-merge": "^2.2.0",
     "tailwindcss": "^3.4.0",
     "typescript": "^5.1.6",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "wait-on": "^8.0.3"
   }
 }

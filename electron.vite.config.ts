@@ -1,10 +1,21 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
 import { resolve } from 'path'
+import copy from 'rollup-plugin-copy'
 
 export default defineConfig({
   main: {
-    plugins: [externalizeDepsPlugin()],
+    plugins: [externalizeDepsPlugin(),
+      copy({
+        targets: [
+          {
+            src: 'src/server',
+            dest: 'out/src' // ou 'build' selon ta structure (vérifie le dossier de sortie réel)
+          }
+        ],
+        hook: 'writeBundle'
+      })
+    ],
     resolve: {
       alias: {
         '@/lib': resolve('src/main/lib'),
