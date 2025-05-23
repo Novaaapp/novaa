@@ -44,7 +44,6 @@ const App = () => {
             <div className="flex justify-end">
               <div className="bg-red-500/60 text-white p-3 rounded-xl max-w-xs">
                 Hi novaa! How are you?
-                {message}
               </div>
             </div>
             <div className="flex justify-start">
