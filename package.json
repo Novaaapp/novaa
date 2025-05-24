@@ -42,6 +42,7 @@
     "@types/node": "^18.17.5",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
+    "@types/react-router-dom": "^5.3.3",
     "@vitejs/plugin-react": "^4.0.4",
     "autoprefixer": "^10.4.16",
     "clsx": "^2.1.0",

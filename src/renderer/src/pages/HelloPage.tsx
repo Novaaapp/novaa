@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { useEffect, useState } from 'react'
 import getMessage from '../services/helloService'
 
@@ -12,11 +13,7 @@ const Hello = () => {
     fetchMessage()
   }, [])
 
-  return (
-    <div>
-      {message}
-    </div>
-  )
+  return <div>{message}</div>
 }
 
 export default Hello

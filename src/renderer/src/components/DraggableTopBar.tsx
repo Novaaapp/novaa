@@ -1,49 +1,59 @@
 /* eslint-disable prettier/prettier */
-/* export const DraggableTopBar = () => {
-  return (
-    <header className="absolute inset-0 h-8 bg-transparent border-b border-[rgba(255,255,255,0.1)]"></header>
-  )
-} */
+import { FiSidebar } from 'react-icons/fi'
+import { VscChromeClose, VscChromeMaximize, VscChromeMinimize } from 'react-icons/vsc'
 
-// ... existing code ...
-export const DraggableTopBar = () => {
+type DraggableTopBarProps = {
+  onToggleSidebar: () => void
+}
+
+export const DraggableTopBar = ({ onToggleSidebar }: DraggableTopBarProps) => {
   const handleMinimize = () => {
-    // window.electron.ipcRenderer.send('minimize-window');
-    console.log('Minimize clicked')
+    window.electron.ipcRenderer.send('minimize-window')
   }
 
   const handleMaximize = () => {
-    // window.electron.ipcRenderer.send('maximize-window');
-    console.log('Maximize clicked')
+    window.electron.ipcRenderer.send('maximize-window')
   }
 
   const handleClose = () => {
-    // window.electron.ipcRenderer.send('close-window');
-    console.log('Close clicked')
+    window.electron.ipcRenderer.send('close-window')
   }
 
   return (
     <header className="fixed top-0 left-0 right-0 h-8 bg-transparent border-b border-white/10 flex items-center select-none z-50">
-      <div className="w-64 h-full flex items-center space-x-2 pl-3 bg-black/20  border-r border-white/10 -webkit-app-region-no-drag">
-        {' '}
-        {/* Buttons on the left */}
+      <div className="w-1/3 min-w-56 max-w-80 h-full flex items-center justify-between bg-black/20 border-r border-white/10 -webkit-app-region-no-drag">
+        <div className="flex items-center space-x-2 pl-3">
+          <button
+            onClick={handleClose}
+            className="group relative w-3 h-3 bg-red-500 rounded-full hover:bg-red-600 focus:outline-none"
+            aria-label="Close"
+          >
+            <VscChromeClose className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 opacity-0 group-hover:opacity-100 transition-opacity text-black" />
+          </button>
+          <button
+            onClick={handleMinimize}
+            className="group relative w-3 h-3 bg-yellow-400 rounded-full hover:bg-yellow-500 focus:outline-none"
+            aria-label="Minimize"
+          >
+            <VscChromeMinimize className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 opacity-0 group-hover:opacity-100 transition-opacity text-black" />
+          </button>
+          <button
+            onClick={handleMaximize}
+            className="group relative w-3 h-3 bg-green-400 rounded-full hover:bg-green-500 focus:outline-none"
+            aria-label="Maximize"
+          >
+            <VscChromeMaximize className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 opacity-0 group-hover:opacity-100 transition-opacity text-black" />
+          </button>
+        </div>
         <button
-          onClick={handleClose} // Swapped order for macOS like feel (red first)
-          className="w-3 h-3 bg-red-500 rounded-full hover:bg-red-600 focus:outline-none"
-          aria-label="Close"
-        ></button>
-        <button
-          onClick={handleMinimize}
-          className="w-3 h-3 bg-yellow-400 rounded-full hover:bg-yellow-500 focus:outline-none"
-          aria-label="Minimize"
-        ></button>
-        <button
-          onClick={handleMaximize}
-          className="w-3 h-3 bg-green-400 rounded-full hover:bg-green-500 focus:outline-none"
-          aria-label="Maximize"
-        ></button>
+          onClick={onToggleSidebar}
+          className="group relative focus:outline-none pr-3"
+          aria-label="Toggle Sidebar"
+        >
+          <FiSidebar className="w-4 h-4 text-gray-400 hover:text-white transition-colors" />
+        </button>
       </div>
-      <div className="-webkit-app-region-drag h-full flex-grow flex items-center justify-center ">
+      <div className="-webkit-app-region-drag h-full flex-grow flex items-center justify-center">
         <span
           className="text-red-500 font-black transform hover:scale-110 transition-transform duration-200 inline-block"
           style={{
