@@ -1,12 +1,10 @@
 /* eslint-disable prettier/prettier */
 
-import { useEffect, useState } from 'react';
-import { DraggableTopBar } from './components/DraggableTopBar';
-import { Sidebar } from './components/Sidebar';
-
+import { useEffect, useState } from 'react'
+import { DraggableTopBar } from './components/DraggableTopBar'
+import { Sidebar } from './components/Sidebar'
 
 const App = () => {
-
   const [message, setMessage] = useState('')
   // Exemple dans App.tsx ou un hook
   useEffect(() => {
@@ -14,11 +12,11 @@ const App = () => {
       .then((res) => res.json())
       .then((data) => setMessage(data.message))
       .catch((error) => {
-        console.error('Erreur:', error);
-        setMessage(error.message);
-      });
-  }, []);
-  
+        console.error('Erreur:', error)
+        setMessage(error.message)
+      })
+  }, [])
+
   return (
     <div
       className="min-h-screen rounded-[10px] overflow-hidden bg-[rgba(0,0,0,0.7)] border border-[rgba(255,255,255,0.28)] flex flex-col"
@@ -43,7 +41,7 @@ const App = () => {
             <div className="flex justify-start"></div>
             <div className="flex justify-end">
               <div className="bg-red-500/60 text-white p-3 rounded-xl max-w-xs">
-                Hi novaa! How are you?
+                Hi {message} How are you?
               </div>
             </div>
             <div className="flex justify-start">
