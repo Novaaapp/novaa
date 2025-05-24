@@ -1,26 +1,23 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
+
 const app = express();
 const PORT = 3001;
 
-app.use(cors())
+// Middlewares globaux
+app.use(cors());
 app.use(express.json());
-const staticPath = path.join(__dirname, '../../renderer');
+
+// Serveur de fichiers statiques (si nécessaire)
+const staticPath = path.join(__dirname, 'public');
 app.use(express.static(staticPath));
 
+// Import des routes
+const helloRoutes = require('./routes/hello');
+app.use('/api', helloRoutes);
 
-
-app.get('/api/hello', (req, res) => {
-  res.json({ message: 'Hello from Express!' });
-});
-
-
-// =====================================================================
-// Rediriger toutes les autres routes vers index.html (frontend SPA)
-// app.get('/*', (req, res) => {
-//     res.sendFile(path.join(staticPath, 'index.html'));
-// });
+// Démarrage serveur
 app.listen(PORT, () => {
   console.log(`🚀 Server listening on http://localhost:${PORT}`);
 });
