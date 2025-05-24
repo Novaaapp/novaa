@@ -75,7 +75,7 @@ export const Sidebar = ({ isVisible = true }: SidebarProps) => {
       <footer className="p-3 border-t border-white/10">
         {/* Placeholder for user info */}
         <div
-          className="flex items-center space-x-2 p-2 rounded bg-white/10 cursor-pointer"
+          className="flex items-center space-x-2 p-2 rounded hover:bg-white/10 cursor-pointer"
           onClick={handleOpenSettings} // Added onClick handler here
         >
           <div className="w-8 h-8 bg-gray-600 rounded-full"></div> {/* User Avatar Placeholder */}
