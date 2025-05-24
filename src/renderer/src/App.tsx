@@ -1,17 +1,15 @@
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import Chat from './pages/ChatPage';
-import Hello from './pages/HelloPage';
-
+/* eslint-disable prettier/prettier */
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
+import Chat from './pages/ChatPage'
 
 const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Hello />} />
-        <Route path="/chat" element={<Chat />} />
+        <Route path="/" element={<Chat />} />
       </Routes>
     </Router>
-  );
-};
+  )
+}
 
-export default App;
+export default App

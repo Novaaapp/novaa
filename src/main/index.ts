@@ -7,6 +7,8 @@ import icon from '../../resources/icon.png?asset'
 
 let serverProcess: ChildProcess | null = null
 
+let mainWindow: BrowserWindow | null = null
+
 function startServer(): Promise<void> {
   return new Promise((resolve, reject) => {
     const serverPath = is.dev
@@ -36,10 +38,10 @@ function startServer(): Promise<void> {
 }
 
 function createWindow(): void {
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     title: 'novaa',
     width: 700,
-    height: 470,
+    height: 1000,
     show: false,
     autoHideMenuBar: true,
     transparent: true,
@@ -54,7 +56,7 @@ function createWindow(): void {
   })
 
   mainWindow.on('ready-to-show', () => {
-    mainWindow.show()
+    mainWindow!.show()
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
@@ -62,11 +64,16 @@ function createWindow(): void {
     return { action: 'deny' }
   })
 
-  if (process.env['ELECTRON_RENDERER_URL']) {
+  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+
+  // Clear mainWindow when the window is closed
+  mainWindow.on('closed', () => {
+    mainWindow = null
+  })
 }
 
 app.whenReady().then(async () => {
@@ -76,7 +83,30 @@ app.whenReady().then(async () => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  ipcMain.on('ping', () => console.log('pong'))
+  ipcMain.on('minimize-window', () => {
+    const window = BrowserWindow.getFocusedWindow()
+    if (window) {
+      window.minimize()
+    }
+  })
+
+  ipcMain.on('maximize-window', () => {
+    const window = BrowserWindow.getFocusedWindow()
+    if (window) {
+      if (window.isMaximized()) {
+        window.unmaximize()
+      } else {
+        window.maximize()
+      }
+    }
+  })
+
+  ipcMain.on('close-window', () => {
+    const window = BrowserWindow.getFocusedWindow()
+    if (window) {
+      window.close()
+    }
+  })
 
   try {
     await startServer() // attendre le serveur
