@@ -1,6 +1,6 @@
 const prisma = require('../models/prismaClient.js');
 
-const chatService = require('../AiServices/chatService');
+const {chatService} = require('../AiServices/chatService');
 
 exports.handleChatMessage = async (req, res) => {
   try {
