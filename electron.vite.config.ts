@@ -2,10 +2,14 @@ import react from '@vitejs/plugin-react'
 import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
 import { resolve } from 'path'
 import copy from 'rollup-plugin-copy'
-
+import del from 'rollup-plugin-delete'
 export default defineConfig({
   main: {
     plugins: [externalizeDepsPlugin(),
+      del({
+        targets: ['out/src/server'],
+        hook: 'buildStart'
+      }),
       copy({
         targets: [
           {
