@@ -1,16 +1,17 @@
 const prisma = require('../models/prismaClient.js');
 
-const {chatService} = require('../AiServices/chatService');
+const chatService = require('../AiServices/chatService.js');
 
 exports.handleChatMessage = async (req, res) => {
   try {
     const { conversationId, userMessage, model, baseURL, temperature, max_token } = req.body;
+    
     if (!conversationId || !userMessage) {
       return res.status(400).json({ error: 'conversationId and userMessage are required' });
     }
-
+    console.log('handleChatMessage called with:', { conversationId, userMessage, model, baseURL, temperature, max_token });
     const reply = await chatService.handleChatMessage(conversationId, userMessage, { model:model, baseURL:baseURL, temperature:temperature, max_token:max_token });
-
+    
     res.json({ reply });
   } catch (error) {
     console.error('Erreur chatController:', error);

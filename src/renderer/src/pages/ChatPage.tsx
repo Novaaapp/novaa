@@ -4,9 +4,14 @@ import { ChatArea } from '@renderer/components/ChatArea'
 import { useEffect, useState } from 'react'
 import { DraggableTopBar } from '../components/DraggableTopBar'
 import { Sidebar } from '../components/Sidebar'
-
+import { useUserStore } from '../store/userStore'
 const Chat = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true)
+  const { user, fetchUser, loading, error } = useUserStore();
+
+  useEffect(() => {
+    fetchUser();
+  },[]);
 
   const handleToggleSidebar = () => {
     setIsSidebarVisible(!isSidebarVisible)
@@ -14,15 +19,6 @@ const Chat = () => {
 
   const [message, setMessage] = useState('')
   // Exemple dans App.tsx ou un hook
-  useEffect(() => {
-    fetch('http://localhost:3001/api/hello')
-      .then((res) => res.json())
-      .then((data) => setMessage(data.message))
-      .catch((error) => {
-        console.error('Erreur:', error)
-        setMessage(error.message)
-      })
-  }, [])
 
   return (
     <div
@@ -36,7 +32,7 @@ const Chat = () => {
     >
       <DraggableTopBar onToggleSidebar={handleToggleSidebar} />
       <div className="flex flex-1 pt-8">
-        <Sidebar isVisible={isSidebarVisible} />
+        <Sidebar userId={1} isVisible={isSidebarVisible} />
         <ChatArea />
       </div>
     </div>

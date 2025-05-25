@@ -1,9 +1,44 @@
 const prisma = require('../models/prismaClient.js');
 const openaiClient = require('./openaiClient');
 const tools = require('./tools');
-const availableTools= require('../tools/chatTools.js')
 // Définition des outils disponibles
-
+const availableTools = [
+    {
+        "type": "function",
+        "function": {
+            "name": "get_weather",
+            "description": "Get the weather in a given location",
+            "parameters": {
+            "type": "object",
+            "properties": {
+                "location": {
+                "type": "string",
+                "description": "The city and state, e.g. Chicago, IL",
+                },
+                "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]},
+            },
+            "required": ["location"],
+            },
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "calculator",
+            "description": "Perform basic arithmetic operations",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "expression": {
+                        "type": "string",
+                        "description": "The arithmetic expression to evaluate, e.g., '2 + 2'",
+                    },
+                },
+                "required": ["expression"],
+            },
+        },
+    }
+];
 
 // Map des fonctions réelles
 const toolFunctions = {
@@ -13,6 +48,7 @@ const toolFunctions = {
 
 async function handleChatMessage(conversationId, userMessage, options = {}) {
   try {
+    console.log('params:', { conversationId, userMessage, options });
     // 1. Récupérer l'historique des messages
     const messagesHistory = await prisma.message.findMany({
       where: { conversationId },
@@ -38,8 +74,9 @@ async function handleChatMessage(conversationId, userMessage, options = {}) {
       tools: availableTools,
       tool_choice: "auto" // L'IA décide si elle a besoin d'outils
     });
-
-    const assistantMessage = completion.data.choices[0].message;
+    console.log('assistantMessage:', completion.choices);
+    const assistantMessage = completion.choices[0].message;
+    
 
     // 4. Sauvegarder le message utilisateur
     await prisma.message.create({
@@ -58,7 +95,7 @@ async function handleChatMessage(conversationId, userMessage, options = {}) {
           conversationId,
           role: 'assistant',
           content: assistantMessage.content || '',
-          toolCalls: JSON.stringify(assistantMessage.tool_calls)
+          toolCall: JSON.stringify(assistantMessage.tool_calls)
         },
       });
 
@@ -79,15 +116,15 @@ async function handleChatMessage(conversationId, userMessage, options = {}) {
             });
 
             // Sauvegarder le résultat de l'outil
-            await prisma.message.create({
-              data: {
-                conversationId,
-                role: 'tool',
-                content: JSON.stringify(result),
-                toolCallId: toolCall.id,
-                toolName: functionName
-              },
-            });
+            // await prisma.message.create({
+            //   data: {
+            //     conversationId,
+            //     role: 'tool',
+            //     content: JSON.stringify(result),
+            //     toolCallId: toolCall.id,
+            //     toolName: functionName
+            //   },
+            // });
           }
         } catch (error) {
           console.error(`Erreur lors de l'exécution de l'outil ${toolCall.function.name}:`, error);
@@ -108,7 +145,7 @@ async function handleChatMessage(conversationId, userMessage, options = {}) {
           max_tokens: options.max_tokens ?? 1000,
         });
 
-        const finalAssistantMessage = finalCompletion.data.choices[0].message.content;
+        const finalAssistantMessage = finalCompletion.choices[0].message.content;
 
         // Sauvegarder la réponse finale
         await prisma.message.create({
